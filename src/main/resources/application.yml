@@ -16,10 +16,10 @@ resilience4j.circuitbreaker:
   instances:
     comments:
       slidingWindowSize: 8
-#      minimumNumberOfCalls: 4
+      minimumNumberOfCalls: 4
 #      timeout
-      slowCallDurationThreshold: 2000
+#      slowCallDurationThreshold: 500
 #      percentage
-      slowCallRateThreshould: 50
+#      slowCallRateThreshould: 50
 #      permittedNumberOfCallsInHalfOpenState: 2
 #      waitDurationInOpenState: 10000

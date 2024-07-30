@@ -1,16 +1,16 @@
 package com.barros.publication.service;
 
-import com.barros.publication.client.CommentClient;
 import com.barros.publication.domain.Comment;
 import com.barros.publication.domain.Publication;
 import com.barros.publication.mapper.PublicationMapper;
 import com.barros.publication.repository.PublicationRepository;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class PublicationService {
 
@@ -21,7 +21,7 @@ public class PublicationService {
     private PublicationMapper publicationMapper;
 
     @Autowired
-    private CommentClient commentClient;
+    private CommentService commentService;
 
     public void insert(Publication publication) {
         publicationRepository.save(publicationMapper.toPublicationEntity(publication));
@@ -33,13 +33,12 @@ public class PublicationService {
                 .toList();
     }
 
-    @CircuitBreaker(name = "comments")
     public Publication findById(String id) {
         final Publication publication = publicationRepository.findById(id)
                 .map(publicationMapper::toPublication)
                 .orElseThrow(RuntimeException::new);
 
-        final List<Comment> comments = commentClient.getComments(id);
+        final List<Comment> comments = commentService.getComments(id);
         publication.setComments(comments);
         return publication;
     }
